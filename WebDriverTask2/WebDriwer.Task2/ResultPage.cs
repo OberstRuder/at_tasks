@@ -4,24 +4,31 @@ namespace WebDriwer.Task2
 {
     public class ResultPage
     {
-        private readonly IWebDriver _driver;
+        private readonly IWebDriver _webDriver;
 
-        private IWebElement Title => _driver.FindElement(By.ClassName("content__title"));
-        private IWebElement Text => _driver.FindElement(By.ClassName("content__text"));
+        private IList<IWebElement> PasteText => _webDriver.FindElements(By.XPath("//*[@class='de1']"));
+        private IWebElement PasteTitle => _webDriver.FindElement(By.XPath("//*[@class='info-top']"));
+        private IWebElement Expiration => _webDriver.FindElement(By.XPath("//*[@class='expire']"));
+        private IWebElement SyntaxHighlighting => _webDriver.FindElement(By.XPath("//div[@class='left']/a[@class='btn -small h_800']"));
 
-        public ResultPage(IWebDriver driver)
+        public ResultPage(IWebDriver webDriver)
         {
-            _driver = driver;
+            _webDriver = webDriver;
         }
 
-        public string GetTitle()
+        public string GetPasteText()
         {
-            return Title.Text;
+            return string.Join("\n", PasteText.Select(element => element.Text));
         }
 
-        public string GetText()
+        public string GetPasteTitle()
         {
-            return Text.Text;
+            return PasteTitle.Text;
+        }
+
+        public string GetSyntaxHighlighting()
+        {
+            return SyntaxHighlighting.Text;
         }
     }
 }

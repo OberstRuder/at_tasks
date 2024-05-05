@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Legacy;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -9,49 +10,45 @@ namespace Tests
     public class Tests
     {
         [TestFixture]
-        public class BringItOnTest
+        public class Test
         {
-            private const string Title = "how to gain dominance among developers";
-            private const string Code = @"
-            git config --global user.name  ""New Sheriff in Town""
-            git reset $(git commit-tree HEAD^{tree} -m ""Legacy code"")
-            git push origin master --force
-            ";
+            public const string PasteText = "git config --global user.name  \"New Sheriff in Town\"\n" +
+                                        "git reset $(git commit-tree HEAD^{tree} -m \"Legacy code\")\n" +
+                                        "git push origin master --force";
+            public const string SyntaxHighlighting = "Bash";
+            public const string PasteTitle = "how to gain dominance among developers";
+            public const string PasteExpiration = "10 Minutes";
+            public const string PageTitle = PasteTitle;
 
-            private IWebDriver _driver;
-            private PastebinPage _pastebinPage;
+            private IWebDriver _webDriver;
 
             [SetUp]
             public void SetUp()
             {
-                _driver = WebDriver();
-                _pastebinPage = new PastebinPage(_driver);
+                _webDriver = new ChromeDriver();
+                _webDriver.Manage().Window.Maximize();
+            }
+
+            [Test]
+            public void CreateNewPasteTest()
+            {
+                var page = new PastebinPage(_webDriver);
+                var result = page.OpenPage()
+                    .SetPasteText(PasteText)
+                    .SelectPasteSyntaxHighlighting(SyntaxHighlighting)
+                    .SelectPasteExpiration(PasteExpiration)
+                    .SetPasteTitle(PasteTitle)
+                .CreateNewPaste();
+
+                ClassicAssert.AreEqual(PageTitle, result.GetPasteTitle());
+                ClassicAssert.AreEqual(SyntaxHighlighting, result.GetSyntaxHighlighting());
+                ClassicAssert.AreEqual(PasteText, result.GetPasteText());
             }
 
             [TearDown]
             public void TearDown()
             {
-                _driver.Quit();
-            }
-
-            [Test]
-            public void PostCode()
-            {
-                var response = _pastebinPage.PostCode(Title, Code);
-
-                ClassicAssert.AreEqual("Bad Request (#400)", response.GetTitle());
-                ClassicAssert.AreEqual("Unable to verify your data submission.", response.GetText());
-            }
-
-            private IWebDriver WebDriver()
-            {
-                var options = new ChromeOptions();
-                options.AddArgument("--incognito");
-                options.AddArgument("start-maximized");
-                options.AddUserProfilePreference("profile.default_content_setting_values.cookies", 2);
-                var driver = new ChromeDriver(options);
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-                return driver;
+                _webDriver?.Quit();
             }
         }
     }
