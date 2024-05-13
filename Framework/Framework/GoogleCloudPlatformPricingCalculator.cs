@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebDriwer.Task3
+namespace Framework
 {
     public class GoogleCloudPlatformPricingCalculator : BasePage
     {
@@ -15,6 +15,7 @@ namespace WebDriwer.Task3
         private By NumberOfInstances = By.XPath("//*[@id='c11']");
         private By OperatingSystemDropdown = By.XPath("//span[text() = 'Operating System / Software']/ancestor::div[@class='VfPpkd-TkwUic']");
         private By RegularProvisioningModel = By.XPath("//label[text()='Regular']");
+        private By SpotProvisioningModel = By.XPath("//label[text()='Spot (Preemptible VM)']");
         private By MachineFamilyDropDown = By.XPath("//span[text() = 'Machine Family']/ancestor::div[@class='O1htCb-H9tDt PPUDSe t8xIwc']");
         private By SeriesDropDown = By.XPath("//span[text() = 'Series']/ancestor::div[@class='VfPpkd-TkwUic']");
         private By MachineTypeDropDown = By.XPath("//span[text() = 'Machine type']/ancestor::div[@class='VfPpkd-TkwUic']");
@@ -24,6 +25,8 @@ namespace WebDriwer.Task3
         private By LocalSSDDropdown = By.XPath("//span[text() = 'Local SSD']/ancestor::div[@class='VfPpkd-TkwUic']");
         private By RegionDropdown = By.XPath("//span[text() = 'Region']/ancestor::div[@class='VfPpkd-TkwUic']");
         private By OneYearCommittedUseButton = By.XPath("//label[text()='1 year']");
+        private By NoneCommittedUseButton = By.XPath("//label[text()='None']");
+        private By ThreeYearsCommittedUseButton = By.XPath("//label[text()='3 years']");
         private By EstimateCost = By.XPath("//label[@class='gt0C8e MyvX5d D0aEmf']");
         private By ShareButton = By.XPath("//button[@aria-label='Open Share Estimate dialog']");
         private By AddToEstimateOnCostDetailsButton = By.XPath("//button[@class='AeBiU-LgbsSe AeBiU-LgbsSe-OWXEXe-Bz112c-M1Soyc AeBiU-LgbsSe-OWXEXe-dgl2Hf AeBiU-LgbsSe-OWXEXe-wdeprb-MD85tf-DKzjMe VVEJ3d']");
@@ -46,6 +49,7 @@ namespace WebDriwer.Task3
 
         public GoogleCloudPlatformPricingCalculator InsertNumberOfInstances(string number)
         {
+            Thread.Sleep(5);
             WebDriver.FindElement(NumberOfInstances).Clear();
             WebDriver.FindElement(NumberOfInstances).SendKeys(number);
             return this;
@@ -64,6 +68,12 @@ namespace WebDriwer.Task3
         public GoogleCloudPlatformPricingCalculator SelectRegularProvisionModel()
         {
             WebDriver.FindElement(RegularProvisioningModel).Click();
+            return this;
+        }
+
+        public GoogleCloudPlatformPricingCalculator SelectSpotProvisionModel()
+        {
+            WebDriver.FindElement(SpotProvisioningModel).Click();
             return this;
         }
 
@@ -149,6 +159,18 @@ namespace WebDriwer.Task3
             return this;
         }
 
+        public GoogleCloudPlatformPricingCalculator SelectNoneCommittedUse()
+        {
+            WebDriver.FindElement(NoneCommittedUseButton).Click();
+            return this;
+        }
+
+        public GoogleCloudPlatformPricingCalculator SelectThreeYearsCommittedUse()
+        {
+            WebDriver.FindElement(ThreeYearsCommittedUseButton).Click();
+            return this;
+        }
+
         public AddToEstimatePopUp ClickAddToEstimateOnCostDetailsButton()
         {
             WebDriver.FindElement(AddToEstimateOnCostDetailsButton).Click();
@@ -163,7 +185,7 @@ namespace WebDriwer.Task3
 
         public string GetEstimateCost()
         {
-            Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(2000);
             return WebDriver.FindElement(EstimateCost).Text;
         }
     }

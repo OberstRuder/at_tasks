@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebDriwer.Task3
+namespace Framework
 {
     public class AddToEstimatePopUp : BasePage
     {
@@ -27,6 +27,7 @@ namespace WebDriwer.Task3
         {
             WaitUtil.WaitForElementVisibility(WebDriver, ComputerEngineButton, 10);
             ComputerEngineButton.Click();
+            Thread.Sleep(5);
             return new GoogleCloudPlatformPricingCalculator(WebDriver);
         }
 
